@@ -44,7 +44,12 @@ install_py_package <- function(name) {
   return(output)
 }
 
-packages <- c()
+packages <- hash(c('pandas', 'scipy', 'numpy'), c('pd', 'scp', 'np'))
+
+py_modules <- lapply(keys(packages), install_py_package)
+for(ref in values(packages)) {
+  assign(ref, py_modules[match(ref, values(packages))])
+}
 
 # read in data from github
 data <-  "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
