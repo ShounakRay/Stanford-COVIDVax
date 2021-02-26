@@ -2,50 +2,49 @@
 # install.packages('shiny')
 # install.packages('maptools')
 # install.packages('rworldmap')
+# install.packages('hash')
+
 library(dplyr)
 library(readr)
 library(leaflet)
 library(shiny)
 library(maptools)
 library(rworldmap)
+
 library(reticulate)
+library(hash)
 use_condaenv("r-reticulate")
 # py_discover_config()
 # py_config()
 
-message('Python package ' + name + ' doesn\'t exist.\n')
+# message('Python package ' + name + ' doesn\'t exist.\n')
 
+# Installs Python Package and Returns it
 install_py_package <- function(name) {
   output <- tryCatch(
     {
-      pd <- import(name)
-      message('`' + name + '` successfully installed!')
+      dummy <- reticulate::import(name)
+      return( reticulate::import(name))
     },
     error = function(e)
     {
       message('ERROR!')
       message(e)
-      pd <- import(name)
-      message('`' + name + '` successfully installed!')
       py_install(name, pip = TRUE)
-
-      return(NA)
+      dummy <- install_py_package(name)
+      return(reticulate::import(name))
     },
     warning = function(w)
     {
       message('WARNING!')
       message(w)
     },
-    finally = {
-      message('End of control reached')
-    }
+    finally = {}
   )
+  return(output)
 }
 
-install_py_package('pandas')
-
-py_install("pandas", pip = TRUE)
-pd <- import("pandas")
+packages <- c()
 
 # read in data from github
 data <-  "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
