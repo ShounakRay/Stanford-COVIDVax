@@ -1,4 +1,7 @@
 install.packages('leaflet')
+install.packages('shiny')
+install.packages('maptools')
+install.packages('rworldmap')
 library(dplyr)
 library(readr)
 library(leaflet)
@@ -34,9 +37,7 @@ server <- function(input, output) {
                   fillColor = ~pal(people_vaccinated)) # try other variable names here!
       # how can we make the number of people vaccinated pop up as we hover over different countries?
   })
-  
+
 }
 
 shinyApp(ui = ui, server = server)
-
-
