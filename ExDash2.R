@@ -14,46 +14,45 @@ library(rworldmap)
 library(reticulate)
 library(hash)
 use_condaenv("r-reticulate")
-# py_discover_config()
-# py_config()
+source_python('py_helpers.py')
 
-# message('Python package ' + name + ' doesn\'t exist.\n')
-
-# Installs Python Package and Returns it
-install_py_package <- function(name) {
-  output <- tryCatch(
-    {
-      dummy <- reticulate::import(name)
-      return( reticulate::import(name))
-    },
-    error = function(e)
-    {
-      message('ERROR!')
-      message(e)
-      py_install(name, pip = TRUE)
-      dummy <- install_py_package(name)
-      return(reticulate::import(name))
-    },
-    warning = function(w)
-    {
-      message('WARNING!')
-      message(w)
-    },
-    finally = {}
-  )
-  return(output)
-}
-
-packages <- hash(c('pandas', 'scipy', 'numpy'), c('pd', 'scp', 'np'))
-
-py_modules <- lapply(keys(packages), install_py_package)
-for(ref in values(packages)) {
-  assign(ref, py_modules[match(ref, values(packages))])
-}
+# # Installs Python Package and Returns it
+# install_py_package <- function(name) {
+#   output <- tryCatch(
+#     {
+#       dummy <- reticulate::import(name)
+#       return( reticulate::import(name))
+#     },
+#     error = function(e)
+#     {
+#       message('ERROR!')
+#       message(e)
+#       py_install(name, pip = TRUE)
+#       dummy <- install_py_package(name)
+#       return(reticulate::import(name))
+#     },
+#     warning = function(w)
+#     {
+#       message('WARNING!')
+#       message(w)
+#     },
+#     finally = {}
+#   )
+#   return(output)
+# }
+#
+# # This is just to to use Python directly in the R environment without sourcing
+# packages <- hash(c('pandas', 'scipy', 'numpy'), c('pd', 'scp', 'np'))
+# py_modules <- lapply(keys(packages), install_py_package)
+# for(ref in values(packages)) {
+#   assign(ref, py_modules[match(ref, values(packages))])
+# }
 
 # read in data from github
 data <-  "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
 data <- read_csv(data)
+
+manip_data(data)
 
 # extract most recent rows for each country
 recent <- data.frame(data) %>%
