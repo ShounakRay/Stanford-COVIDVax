@@ -1,7 +1,7 @@
-install.packages('leaflet')
-install.packages('shiny')
-install.packages('maptools')
-install.packages('rworldmap')
+# install.packages('leaflet')
+# install.packages('shiny')
+# install.packages('maptools')
+# install.packages('rworldmap')
 library(dplyr)
 library(readr)
 library(leaflet)
@@ -12,6 +12,37 @@ library(reticulate)
 use_condaenv("r-reticulate")
 # py_discover_config()
 # py_config()
+
+message('Python package ' + name + ' doesn\'t exist.\n')
+
+install_py_package <- function(name) {
+  output <- tryCatch(
+    {
+      pd <- import(name)
+      message('`' + name + '` successfully installed!')
+    },
+    error = function(e)
+    {
+      message('ERROR!')
+      message(e)
+      pd <- import(name)
+      message('`' + name + '` successfully installed!')
+      py_install(name, pip = TRUE)
+
+      return(NA)
+    },
+    warning = function(w)
+    {
+      message('WARNING!')
+      message(w)
+    },
+    finally = {
+      message('End of control reached')
+    }
+  )
+}
+
+install_py_package('pandas')
 
 py_install("pandas", pip = TRUE)
 pd <- import("pandas")
