@@ -8,6 +8,13 @@ library(leaflet)
 library(shiny)
 library(maptools)
 library(rworldmap)
+library(reticulate)
+use_condaenv("r-reticulate")
+# py_discover_config()
+# py_config()
+
+py_install("pandas", pip = TRUE)
+pd <- import("pandas")
 
 # read in data from github
 data <-  "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
