@@ -1,3 +1,16 @@
+#### Ignore all Python-related .gitignores as well
+# Ignore html representations
+*.html
+*.pkl
+*.pickle
+*.csv
+
+Radar.R
+
+######### ######### ######### ######### #########
+######### ######### ######### ######### #########
+######### ######### ######### ######### #########
+
 # History files
 .Rhistory
 .Rapp.history
