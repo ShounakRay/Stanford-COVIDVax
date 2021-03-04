@@ -4,6 +4,8 @@
 # install.packages('rworldmap')
 # install.packages('hash')
 
+# https://www.r-graph-gallery.com/142-basic-radar-chart.html
+
 library(dplyr)
 library(readr)
 library(leaflet)
@@ -53,7 +55,28 @@ data <-  "https://raw.githubusercontent.com/owid/covid-19-data/master/public/dat
 data <- read_csv(data)
 
 # Manipulate the Data as Required in Python
-manip_data(data)
+# manip_data(data)
+
+
+# <><><><><><><><><>
+
+# install.packages('fmsb')
+library(fmsb)
+
+# Create data: note in High school for Jonathan:
+data <- as.data.frame(matrix( sample( 2:20 , 10 , replace=T) , ncol=10))
+colnames(data) <- c("math" , "english" , "biology" , "music" , "R-coding", "data-viz" , "french" , "physic", "statistic", "sport" )
+
+# To use the fmsb package, I have to add 2 lines to the dataframe: the max and min of each topic to show on the plot!
+data <- rbind(rep(20,10) , rep(0,10) , data)
+
+# Check your data, it has to look like this!
+# head(data)
+
+# The default radar chart
+radarchart(data)
+
+# <><><><><><><><><>
 
 # UI Component of Shiny App
 ui <- fluidPage(
@@ -62,8 +85,7 @@ ui <- fluidPage(
 )
 
 # Server Component of Shiny App
-server <- function(input, output)
-{
+server <- function(input, output) {
   # set up map with leaflet
   output$map <- renderLeaflet({...})
 }
