@@ -3,7 +3,7 @@
 # @Email:  rijshouray@gmail.com
 # @Filename: py_helpers.py
 # @Last modified by:   Ray
-# @Last modified time: 11-Mar-2021 15:03:40:409  GMT-0700
+# @Last modified time: 11-Mar-2021 15:03:40:408  GMT-0700
 # @License: [Private IP]
 
 from collections import Counter
@@ -25,9 +25,13 @@ def manip_data(df, attr, max=20, min=0):
 
     df = df.infer_objects()
 
-    df.to_html('testcov.html')
-
     df = df[['location', attr]]
+
+    a, b = 10, 50
+    x, y = df[attr].min(), df[attr].max()
+    df[attr] = (df[attr] - x) / (y - x) * (b - a) + a
+
+    df.to_html('testcov.html')
 
     df = pd.pivot_table(df, values=attr, columns='location').reset_index(drop=True)
 
