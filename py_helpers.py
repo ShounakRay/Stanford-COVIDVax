@@ -3,15 +3,8 @@
 # @Email:  rijshouray@gmail.com
 # @Filename: py_helpers.py
 # @Last modified by:   Ray
-# @Last modified time: 14-Mar-2021 23:03:45:457  GMT-0600
+# @Last modified time: 14-Mar-2021 23:03:92:927  GMT-0600
 # @License: [Private IP]
-
-# This is a library that I use which returns the frequency
-#   of values in a column
-# from collections import Counter
-
-# Basic python library for numerical analysis
-# import numpy as np
 
 # Library which allows me to make tables AKA DataFrames
 import pandas as pd
@@ -72,6 +65,10 @@ def manip_data(df, attr, top_n=10, norm_max=50, norm_min=10):
         df.sort_index(inplace=True)
 
         return df
+
+    # Casts value to float
+    # NOTE: This is a weird bug, don't worry about it for R
+    top_n = int(top_n)
 
     # Casts the R data.frame to a pandas DataFrame
     # NOTE: This is probably optional since `reticulate` likely automatically

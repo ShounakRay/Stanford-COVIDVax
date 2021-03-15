@@ -20,48 +20,44 @@ recent <- data.frame(data) %>%
   group_by (location) %>%
   slice(which.max(date))
 
-data_out <- as.data.frame(manip_data(recent, 'total_vaccinations'))
+data_out <- as.data.frame(manip_data(recent,
+                                    'total_vaccinations',
+                                    4))
 
-radarchart(data_out, vlcex=0.3)
+radarchart(data_out)
 
 ui <- shinyUI(dashboardPage(
-  dashboardHeader(title = "Working on it"),
+  dashboardHeader(title = "Radar Charts"),
   dashboardSidebar(),
-  # titlePanel(title=h4("Races", align="center")),
-  # sidebarPanel(
-  #   sliderInput("num", "Number:",min = 0, max = 5,step=1,value=c(1,2))),
-  # mainPanel(plotOutput("plot2")),
-  dashboardBody(# Boxes need to be put in a row (or column)
-
-    # fluidRow(
-    #   box(
-    #     selectInput(
-    #       "School",
-    #       "Please select the schools you want to compare",
-    #       choices = c("Elementary", "Middle & High")
-    #     )
-    #   ),
-    #
-    #   box(
-    #     title = "Controls",
-    #     sliderInput(
-    #       "schoolSize",
-    #       "Please filter the schools based upon student population:",
-    #       min = 2,
-    #       max = 800,
-    #       value = c(100, 200),
-    #       step = 20
-    #     )
-    #   )
-    # ),
-    fluidRow(# box(
-      #   selectizeInput("geo_13_14",
-      #                  "Select the school, sos my wording:",
-      #                  choices = geo_school)
-      # ),
+  dashboardBody(
+    # Boxes need to be put in a row (or column)
+    fluidRow(
       box(
-        plotOutput('radarPlot')
-      )))
+        selectInput(
+          "metric_type",
+          "Please select the metric you wish to investigate",
+          choices = c("total_vaccinations", "people_vaccinated",
+                      "daily_vaccinations", "total_vaccinations_per_hundred")
+        )
+      ),
+
+      box(
+        title = "Controls",
+        sliderInput(
+          "top_boundary",
+          "Please filter the schools based upon student population:",
+          min = 3,
+          max = 100,
+          value = 10,
+          step = 1
+        )
+      )
+    ),
+    fluidRow(
+      # box(selectizeInput("geo_13_14",
+      #                           "Select the school, sos my wording:")),
+             box(plotOutput('radarPlot')))
+  )
 ))
 
 # ui <- fluidPage(
@@ -75,10 +71,11 @@ server <- shinyServer(function(input, output) {
     # Create data: note in High school for several students
     set.seed(99)
     data = data_out
-    radarchart(as.data.frame(manip_data(recent, input$download)))
+    radarchart(as.data.frame(manip_data(recent, input$metric_type, top_n=input$top_boundary)))
+    # radarchart(as.data.frame(manip_data(recent, input$download)))
   },
-  width = 400,
-  height = 400)
+  width = 800,
+  height = 600)
 })
 
 # Run the application
