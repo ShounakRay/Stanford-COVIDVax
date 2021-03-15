@@ -56,7 +56,7 @@ ui <- shinyUI(dashboardPage(
         title = "Controls",
         sliderInput(
           "top_boundary",
-          "Please filter the schools based upon student population:",
+          "Please select how many top countries you want to see:",
           min = 3,
           max = 30,
           value = 10,
