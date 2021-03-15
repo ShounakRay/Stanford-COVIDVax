@@ -3,14 +3,17 @@
 # @Email:  rijshouray@gmail.com
 # @Filename: py_helpers.py
 # @Last modified by:   Ray
-# @Last modified time: 14-Mar-2021 23:03:92:927  GMT-0600
+# @Last modified time: 15-Mar-2021 00:03:90:908  GMT-0600
 # @License: [Private IP]
 
 # Library which allows me to make tables AKA DataFrames
 import pandas as pd
 
 
-def manip_data(df, attr, top_n=10, norm_max=50, norm_min=10):
+def manip_data(df, attr, top_n=10, norm_max=50, norm_min=10,
+               early_out=False, metrics=['total_vaccinations',
+                                         'people_vaccinated',
+                                         'daily_vaccinations']):
     """This returns a manipulated version of the data which
     that is required for the radar plot in R.
 
@@ -28,6 +31,12 @@ def manip_data(df, attr, top_n=10, norm_max=50, norm_min=10):
     norm_min : int
         Minimum bound for the normalized column data.
         This is relative and unitness, just a scalar.
+    early_out : bool **DON'T WORRY ABOUT THIS**
+        This is for e-charts integration. Still a work in progress if time permits.
+        It's called early_out since not all the processing of `manip_data` is executed.
+    metrics : list (of str) **DON'T WORRY ABOUT THIS**
+        This is for e-charts integration. Still a work in progress if time permits.
+        The (at least three) metrics the e-charts radarplot should depict.
 
     Returns
     -------
@@ -78,6 +87,16 @@ def manip_data(df, attr, top_n=10, norm_max=50, norm_min=10):
     # NOTE: This is probably optional since pandas likely automatically
     #   does this during ingestion
     df = df.infer_objects()
+
+    # NOTE: **DON'T WORRY ABOUT THIS**
+    #       This is for e-charts integration (different data format required)
+    if(early_out):
+        df = df[['location'] + metrics]
+        # df = df.sort_values(attr).reset_index(drop=True)
+        df.index = df['location']
+        df.drop('location', axis=1, inplace=True)
+        df = df.head(top_n)
+        return df
 
     # FORMAT OF DATAFRAME AT THIS POINT (lots of columns, lots of rows)
     #   location	iso_code	date	    total_vaccinations   MORE METRICS
