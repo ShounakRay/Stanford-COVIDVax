@@ -22,11 +22,15 @@ recent <- data.frame(data) %>%
 
 data_out <- as.data.frame(manip_data(recent, 'total_vaccinations'))
 
-radarchart(data_out)
+radarchart(data_out, vlcex=0.3)
 
 ui <- shinyUI(dashboardPage(
   dashboardHeader(title = "Working on it"),
   dashboardSidebar(),
+  # titlePanel(title=h4("Races", align="center")),
+  # sidebarPanel(
+  #   sliderInput("num", "Number:",min = 0, max = 5,step=1,value=c(1,2))),
+  # mainPanel(plotOutput("plot2")),
   dashboardBody(# Boxes need to be put in a row (or column)
 
     # fluidRow(
@@ -60,22 +64,21 @@ ui <- shinyUI(dashboardPage(
       )))
 ))
 
+# ui <- fluidPage(
+#   selectInput("download", "Select Data to download", choices = c("total_vaccinations",
+#   "people_vaccinated",
+#   "daily_vaccinations"))
+# )
+
 server <- shinyServer(function(input, output) {
   output$radarPlot <- renderPlot({
     # Create data: note in High school for several students
     set.seed(99)
     data = data_out
-    colors_border = c(rgb(0.2, 0.5, 0.5, 0.9),
-                      rgb(0.8, 0.2, 0.5, 0.9) ,
-                      rgb(0.7, 0.5, 0.1, 0.9))
-    colors_in = c(rgb(0.2, 0.5, 0.5, 0.4),
-                  rgb(0.8, 0.2, 0.5, 0.4) ,
-                  rgb(0.7, 0.5, 0.1, 0.4))
-    radarchart(data)
-    legend(x = 0.7,
-           y = 1,
-           legend = rownames(data[-c(1, 2), ]))
-  })
+    radarchart(as.data.frame(manip_data(recent, input$download)))
+  },
+  width = 400,
+  height = 400)
 })
 
 # Run the application
