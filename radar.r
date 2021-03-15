@@ -25,15 +25,21 @@ recent <- data.frame(data) %>%
   slice(which.max(date))
 
 data_out <- as.data.frame(manip_data(recent, 'total_vaccinations',
-                                     top_n = 4, early_out=FALSE))
+                                     top_n = 6, early_out=FALSE))
 
-radarchart(data_out)
+
+#######################################################
+############### RADAR CHART TESTING ###################
+
+# https://www.r-graph-gallery.com/142-basic-radar-chart.html
+# >> (Can't get axes labels to pop up!)
+radarchart(data_out, caxislabels=seq(20, 100, 20), axislabcol="grey")
 
 #######################################################
 ################ FMSB DASHBOARDING ####################
 
 ui <- shinyUI(dashboardPage(
-  dashboardHeader(title = "Radar Charts"),
+  dashboardHeader(title = "COVID Radar Charts 😃"),
   dashboardSidebar(),
   dashboardBody(
     # Boxes need to be put in a row (or column)
@@ -42,8 +48,7 @@ ui <- shinyUI(dashboardPage(
         selectInput(
           "metric_type",
           "Please select the metric you wish to investigate",
-          choices = c("total_vaccinations", "people_vaccinated",
-                      "daily_vaccinations", "total_vaccinations_per_hundred")
+          choices = c(colnames(recent))[-c(1:3)]
         )
       ),
 
@@ -53,7 +58,7 @@ ui <- shinyUI(dashboardPage(
           "top_boundary",
           "Please filter the schools based upon student population:",
           min = 3,
-          max = 100,
+          max = 30,
           value = 10,
           step = 1
         )
@@ -79,7 +84,10 @@ server <- shinyServer(function(input, output) {
 })
 
 # FMSB BASED SHINY DASHBOARD
-# shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server)
+
+#######################################################
+#######################################################
 
 #######################################################
 ################ E CHARTS EXPERIMENTAL ################
